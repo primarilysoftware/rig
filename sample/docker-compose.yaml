@@ -1,0 +1,18 @@
+services:
+  cosmosdb:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
+    ports:
+      - 8081:8081
+      - 10250-10255:10250-10255
+    volumes:
+      - ./Shared/HealthChecker/build/HealthChecker.linux-x64:/tools/healthchecker
+    environment:
+      AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE: true
+      AZURE_COSMOS_EMULATOR_PARTITION_COUNT: 3
+      AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE: ${HOSTIP}
+    healthcheck:
+      test: ["CMD-SHELL", "/tools/healthchecker 'https://localhost:8081/_explorer/index.html'"]
+      interval: 10s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
