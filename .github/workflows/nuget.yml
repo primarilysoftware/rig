@@ -16,6 +16,10 @@ jobs:
       - name: Build
         run: dotnet build -c Release
       - name: Pack
-        run: dotnet pack -c Release --no-build --output .
+        run: dotnet pack ./src/Rig.Api/Rig.Api.csproj -c Release --no-build /p:Version=${{ github.event.release.tag_name }} --output .      
+      - name: Pack
+        run: dotnet pack ./src/Rig.CosmosDb/Rig.CosmosDb.csproj -c Release --no-build /p:Version=${{ github.event.release.tag_name }} --output .      
+      - name: Pack
+        run: dotnet pack ./src/Rig.Domain/Rig.Domain.csproj -c Release --no-build /p:Version=${{ github.event.release.tag_name }} --output .
       - name: Push
-        run: dotnet nuget push "*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
