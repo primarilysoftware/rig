@@ -10,7 +10,7 @@ namespace Rig.Api;
 
 public static class YarpExtensions
 {
-    public static void MapSpaProxy(this WebApplication app, string spaServer)
+    public static void RigSpaProxy(this WebApplication app, string spaServer, bool requireAuthentication = false)
     {
         var forwarder = app.Services.GetRequiredService<IHttpForwarder>();
 
@@ -24,7 +24,7 @@ public static class YarpExtensions
 
         app.Map("{**catch-all}", async httpContext =>
         {
-            if (!httpContext.User.Identity?.IsAuthenticated ?? false)
+            if (requireAuthentication && !(httpContext.User.Identity?.IsAuthenticated ?? false))
             {
                 await httpContext.ChallengeAsync();
                 return;
